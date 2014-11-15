@@ -16,7 +16,6 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[apt]
       - recipe[wordpress]
     attributes:
       mysql:
