@@ -33,14 +33,14 @@ sites.each do |site|
     owner 'root'
     group 'root'
     variables({
-      db_name:          site[:db][:name],
-      db_user:          site[:db][:user],
-      db_pass:          site[:db][:pass],
-      db_host:          site[:db][:host]    || 'localhost',
-      db_charset:       site[:db][:charset] || 'utf8',
-      db_collate:       site[:db][:collate] || '',
-      table_prefix:     site[:table_prefix] || 'wp_',
-      debug:            site[:debug]        || 'false',
+      db_name:          site[:db][:name]    || node[:wordpress][:site_defaults][:db][:name],
+      db_user:          site[:db][:user]    || node[:wordpress][:site_defaults][:db][:user],
+      db_pass:          site[:db][:pass]    || node[:wordpress][:site_defaults][:db][:pass],
+      db_host:          site[:db][:host]    || node[:wordpress][:site_defaults][:db][:host],
+      db_charset:       site[:db][:charset] || node[:wordpress][:site_defaults][:db][:charset],
+      db_collate:       site[:db][:collate] || node[:wordpress][:site_defaults][:db][:collate],
+      table_prefix:     site[:table_prefix] || node[:wordpress][:site_defaults][:table_prefix],
+      debug:            site[:debug]        || node[:wordpress][:site_defaults][:debug],
       auth_key:         SecureRandom.hex,
       secure_auth_key:  SecureRandom.hex,
       logged_in_key:    SecureRandom.hex,
