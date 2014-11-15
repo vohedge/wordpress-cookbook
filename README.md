@@ -1,23 +1,28 @@
 wordpress Cookbook
 ==================
-TODO: Enter the cookbook description here.
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+Just another WordPress cookbook.
+This cookbook supports multiple WordPress install.
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-e.g.
-#### packages
-- `toaster` - wordpress needs toaster to brown your bagel.
+#### Cookbooks
+
+- apt
+- apache2
+- php
+- mysql
+- database
+
+#### Pratform
+
+- Ubuntu 12.04
+- Ubuntu 14.04 ( maybe )
 
 Attributes
 ----------
-TODO: List your cookbook attributes here.
 
-e.g.
 #### wordpress::default
 <table>
   <tr>
@@ -27,35 +32,130 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['wordpress']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>[:wordpress][:base_dir]</tt></td>
+    <td>String</td>
+    <td>This cookbook suports multiple WordPress install. Those sites are placed this directory.</td>
+    <td><tt>/var/www</tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:name]</tt></td>
+    <td>String</td>
+    <td>Domain name of the site. This value is also used directory name.</td>
+    <td><tt></tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:version]</tt></td>
+    <td>Integer</td>
+    <td>WordPress version ex) 4.0</td>
+    <td><tt></tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:lang]</tt></td>
+    <td>String</td>
+    <td>The specified language file is downloaded into /wp-content/languages</td>
+    <td><tt></tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:db][:name]</tt></td>
+    <td>String</td>
+    <td>MySQL database name</td>
+    <td><tt>wordpress.example.com</tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:db][:user]</tt></td>
+    <td>String</td>
+    <td>MySQL database user</td>
+    <td><tt>wordpress</tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:db][:pass]</tt></td>
+    <td>String</td>
+    <td>MySQL database password</td>
+    <td><tt>wordpress</tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:db][:host]</tt></td>
+    <td>String</td>
+    <td>MySQL database host</td>
+    <td><tt>localhost</tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:db][:charset]</tt></td>
+    <td>String</td>
+    <td>MySQL database charset</td>
+    <td><tt>utf8</tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:db][:collate]</tt></td>
+    <td>String</td>
+    <td>MySQL database collate</td>
+    <td><tt></tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:table prefix]</tt></td>
+    <td>String</td>
+    <td>MySQL database table prefix</td>
+    <td><tt>wp_</tt></td>
+  </tr>
+  <tr>
+    <td><tt>[:wordpress][:sites][:debug]</tt></td>
+    <td>String</td>
+    <td>WordPress debug mode</td>
+    <td><tt>false</tt></td>
   </tr>
 </table>
 
 Usage
 -----
 #### wordpress::default
-TODO: Write usage instructions for each cookbook.
 
-e.g.
 Just include `wordpress` in your node's `run_list`:
 
 ```json
 {
-  "name":"my_node",
+  "mysql": {
+    "server_root_password": "p@ssw0rd",
+    "server_repl_password": "p@ssw0rd",
+    "server_debian_password": "p@ssw0rd",
+    "remove_anonymous_users": true,
+    "remove_test_database": true
+  },
+  "wordpress": {
+    "sites": [
+      {
+        "name": "wp1.example.com",
+        "version": 3.6,
+        "lang": "ja",
+        "db": {
+          name: wp1
+          user: wordpress1
+          pass: wordpress1
+        }
+      },
+      {
+        "name": "wp2.example.com",
+        "version": 4.0,
+        "lang": "ja",
+        "db": {
+          name: wp2
+          user: wordpress2
+          pass: wordpress2
+        }
+      }
+    ]
+  },
   "run_list": [
     "recipe[wordpress]"
   ]
 }
 ```
 
+In this example, WordPress 3.6 is installed in `/var/www/wp1.example.com` and 
+WordPress 4.0 is installed in `/var/www/wp2.example.com`.
+
 Contributing
 ------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
 
-e.g.
 1. Fork the repository on Github
 2. Create a named feature branch (like `add_component_x`)
 3. Write your change
@@ -65,4 +165,7 @@ e.g.
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+Authors: vohedge
+
+License: GPLv2
+

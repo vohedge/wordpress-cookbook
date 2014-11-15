@@ -19,9 +19,9 @@ suites:
       - recipe[wordpress]
     attributes:
       mysql:
-        server_root_password: q654321
-        server_repl_password: q654321
-        server_debian_password: q654321
+        server_root_password: p@ass0wrd
+        server_repl_password: p@ass0wrd
+        server_debian_password: p@ass0wrd
       wordpress:
         sites:
           - name: wp1.example.com
