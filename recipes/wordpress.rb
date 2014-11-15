@@ -73,37 +73,41 @@ sites.each do |site|
     action :create
   end
 
-  if site[:version].nil? || site[:version] >= 4.0
-    lang_version = 'dev'
-  else
-    lang_version = "#{site[:version]}.x"
-  end
+  if ! site[:lang].nil?
 
-  remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/ja.mo" do
-    source "https://translate.wordpress.org/projects/wp/#{lang_version}/#{site[:lang]}/default/export-translations?format=mo"
-    backup false
-    owner "root"
-    group "root"
-    mode "0644"
-    action :create_if_missing
-  end
+    if site[:version].nil? || site[:version] >= 4.0
+      lang_version = 'dev'
+    else
+      lang_version = "#{site[:version]}.x"
+    end
 
-  remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-ja.mo" do
-    source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/#{site[:lang]}/default/export-translations?format=mo"
-    backup false
-    owner "root"
-    group "root"
-    mode "0644"
-    action :create_if_missing
-  end
+    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/ja.mo" do
+      source "https://translate.wordpress.org/projects/wp/#{lang_version}/#{site[:lang]}/default/export-translations?format=mo"
+      backup false
+      owner "root"
+      group "root"
+      mode "0644"
+      action :create_if_missing
+    end
 
-  remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-network-ja.mo" do
-    source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/network/#{site[:lang]}/default/export-translations?format=mo"
-    backup false
-    owner "root"
-    group "root"
-    mode "0644"
-    action :create_if_missing
+    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-ja.mo" do
+      source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/#{site[:lang]}/default/export-translations?format=mo"
+      backup false
+      owner "root"
+      group "root"
+      mode "0644"
+      action :create_if_missing
+    end
+
+    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-network-ja.mo" do
+      source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/network/#{site[:lang]}/default/export-translations?format=mo"
+      backup false
+      owner "root"
+      group "root"
+      mode "0644"
+      action :create_if_missing
+    end
+
   end
 
 end
