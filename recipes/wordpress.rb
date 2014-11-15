@@ -81,7 +81,7 @@ sites.each do |site|
       lang_version = "#{site[:version]}.x"
     end
 
-    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/ja.mo" do
+    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/#{site[:lang]}.mo" do
       source "https://translate.wordpress.org/projects/wp/#{lang_version}/#{site[:lang]}/default/export-translations?format=mo"
       backup false
       owner "root"
@@ -90,7 +90,7 @@ sites.each do |site|
       action :create_if_missing
     end
 
-    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-ja.mo" do
+    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-#{site[:lang]}.mo" do
       source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/#{site[:lang]}/default/export-translations?format=mo"
       backup false
       owner "root"
@@ -99,13 +99,46 @@ sites.each do |site|
       action :create_if_missing
     end
 
-    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-network-ja.mo" do
+    remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/admin-network-#{site[:lang]}.mo" do
       source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/network/#{site[:lang]}/default/export-translations?format=mo"
       backup false
       owner "root"
       group "root"
       mode "0644"
       action :create_if_missing
+    end
+
+    if site[:version] >= 3.5
+      remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/twentytwelve-#{site[:lang]}.mo" do
+        source "https://translate.wordpress.org/projects/wp/#{lang_version}/twentytwelve/#{site[:lang]}/default/export-translations?format=mo"
+        backup false
+        owner "root"
+        group "root"
+        mode "0644"
+        action :create_if_missing
+      end
+    end
+
+    if site[:version] >= 3.6
+      remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/twentythirteen-#{site[:lang]}.mo" do
+        source "https://translate.wordpress.org/projects/wp/#{lang_version}/twentythirteen/#{site[:lang]}/default/export-translations?format=mo"
+        backup false
+        owner "root"
+        group "root"
+        mode "0644"
+        action :create_if_missing
+      end
+    end
+
+    if site[:version] >= 3.8
+      remote_file "#{node[:wordpress][:base_dir]}/#{site[:name]}/wp-content/languages/twentyfourteen-#{site[:lang]}.mo" do
+        source "https://translate.wordpress.org/projects/wp/#{lang_version}/twentyfourteen/#{site[:lang]}/default/export-translations?format=mo"
+        backup false
+        owner "root"
+        group "root"
+        mode "0644"
+        action :create_if_missing
+      end
     end
 
   end
