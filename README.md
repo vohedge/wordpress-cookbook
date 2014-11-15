@@ -127,9 +127,9 @@ Just include `wordpress` in your node's `run_list`:
         "version": 3.6,
         "lang": "ja",
         "db": {
-          name: wp1
-          user: wordpress1
-          pass: wordpress1
+          "name": "wp1",
+          "user": "wordpress1",
+          "pass": "wordpress1"
         }
       },
       {
@@ -137,9 +137,9 @@ Just include `wordpress` in your node's `run_list`:
         "version": 4.0,
         "lang": "ja",
         "db": {
-          name: wp2
-          user: wordpress2
-          pass: wordpress2
+          "name": "wp2",
+          "user": "wordpress2",
+          "pass": "wordpress2"
         }
       }
     ]
