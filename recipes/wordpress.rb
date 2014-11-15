@@ -55,7 +55,7 @@ sites.each do |site|
   file "#{node[:wordpress][:base_dir]}/#{site[:name]}/.htaccess" do
     owner node[:apache][:user]
     group node[:apache][:user]
-    mode '0744'
+    mode '0644'
     action :create
   end
 
