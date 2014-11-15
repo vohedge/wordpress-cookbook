@@ -7,10 +7,35 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
-  - name: centos-6.4
+    driver:
+      network:
+        - ["forwarded_port", {guest: 80, host: 8080}]
+        - ["private_network", {ip: "192.168.33.33"}]
+  # - name: centos-6.4
 
 suites:
   - name: default
     run_list:
-      - recipe[wordpress::default]
+      - recipe[apt]
+      - recipe[wordpress]
     attributes:
+      mysql:
+        server_root_password: q654321
+        server_repl_password: q654321
+        server_debian_password: q654321
+      wordpress:
+        sites:
+          - name: wp1.example.com
+            version: 3.6
+            lang: ja
+            db:
+              name: wp1
+              user: wordpress1
+              pass: wordpress1
+          - name: wp2.example.com
+            version: 4.0
+            lang: ja
+            db:
+              name: wp2
+              user: wordpress2
+              pass: wordpress2
