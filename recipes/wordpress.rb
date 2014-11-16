@@ -24,40 +24,27 @@ node[:wordpress][:sites].each do |site|
   site_db_collate   = site[:db][:collate] || node[:wordpress][:site_defaults][:db][:collate]
   site_table_prefix = site[:table_prefix] || node[:wordpress][:site_defaults][:table_prefix]
   site_debug        = site[:debug]        || node[:wordpress][:site_defaults][:debug]
+  site_directory    = "#{node['wordpress']['base_dir']}/#{site_name}"
 
-  execute "Extract WordPress #{site_version} tarball" do
-    cwd "/tmp"
-    command <<-EOF
-      tar -xvzf wordpress-#{site_version}.tar.gz
-      mv wordpress wordpress-#{site_version}
-      EOF
-    action :nothing
-    not_if { ::File.exists?("/tmp/wordpress-#{site_version}") }
+  directory site_directory do
+    user node[:wordpress][:owner]
+    group node[:wordpress][:group]
   end
 
-  execute "Copy WordPress #{site_version} for #{site_name}" do
-    cwd "/tmp"
-    command <<-EOF
-      mkdir -p #{node[:wordpress][:base_dir]}/#{site_name}
-      cp -r wordpress-#{site_version}/* #{node[:wordpress][:base_dir]}/#{site_name}
-      EOF
-    action :nothing
-    not_if { ::File.exists?("#{node[:wordpress][:base_dir]}/#{site_name}") }
-  end
-
-  remote_file "/tmp/wordpress-#{site_version}.tar.gz" do
-    source "http://wordpress.org/wordpress-#{site_version}.tar.gz"
-    backup false
-    notifies :run, "execute[Extract WordPress #{site_version} tarball]", :immediately
-    notifies :run, "execute[Copy WordPress #{site_version} for #{site_name}]", :immediately
-    not_if { ::File.exists?("/tmp/wordpress-#{site_version}.tar.gz") }
+  tar_extract "http://wordpress.org/wordpress-#{site_version}.tar.gz" do
+    target_dir site_directory
+    creates File.join(site_directory, 'index.php')
+    tar_flags [ '--strip-components 1' ]
+    user node[:wordpress][:owner]
+    group node[:wordpress][:group]
+    not_if { ::File.exists?("#{site_directory}/index.php") }
   end
 
   template "#{node[:wordpress][:base_dir]}/#{site_name}/wp-config.php" do
     source "wp-config.php.erb"
-    mode '0644'
-    owner 'root'
-    group 'root'
+    mode '0404'
+    owner node[:wordpress][:owner]
+    group node[:wordpress][:owner]
     variables({
       db_name:          site_db_name,
       db_user:          site_db_user,
@@ -81,7 +68,7 @@ node[:wordpress][:sites].each do |site|
   file "#{node[:wordpress][:base_dir]}/#{site_name}/.htaccess" do
     owner node[:apache][:user]
     group node[:apache][:user]
-    mode '0644'
+    mode '0600'
     action :create
   end
 
@@ -93,8 +80,8 @@ node[:wordpress][:sites].each do |site|
   end
 
   directory "#{node[:wordpress][:base_dir]}/#{site_name}/wp-content/languages" do
-    owner 'root'
-    group 'root'
+    owner node[:wordpress][:owner]
+    group node[:wordpress][:group]
     mode '0755'
     action :create
   end
@@ -107,61 +94,61 @@ node[:wordpress][:sites].each do |site|
     lang_version = "#{wp_major_version}.x"
     lang_version = 'dev' if wp_major_version.to_f >= wp_default_major_version.to_f
 
-    remote_file "#{node[:wordpress][:base_dir]}/#{site_name}/wp-content/languages/#{site_lang}.mo" do
+    remote_file "#{site_directory}/wp-content/languages/#{site_lang}.mo" do
       source "https://translate.wordpress.org/projects/wp/#{lang_version}/#{site_lang}/default/export-translations?format=mo"
       backup false
-      owner "root"
-      group "root"
+      owner node[:wordpress][:owner]
+      group node[:wordpress][:group]
       mode "0644"
       action :create_if_missing
     end
 
-    remote_file "#{node[:wordpress][:base_dir]}/#{site_name}/wp-content/languages/admin-#{site_lang}.mo" do
+    remote_file "#{site_directory}/wp-content/languages/admin-#{site_lang}.mo" do
       source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/#{site_lang}/default/export-translations?format=mo"
       backup false
-      owner "root"
-      group "root"
+      owner node[:wordpress][:owner]
+      group node[:wordpress][:group]
       mode "0644"
       action :create_if_missing
     end
 
-    remote_file "#{node[:wordpress][:base_dir]}/#{site_name}/wp-content/languages/admin-network-#{site_lang}.mo" do
+    remote_file "#{site_directory}/wp-content/languages/admin-network-#{site_lang}.mo" do
       source "https://translate.wordpress.org/projects/wp/#{lang_version}/admin/network/#{site_lang}/default/export-translations?format=mo"
       backup false
-      owner "root"
-      group "root"
+      owner node[:wordpress][:owner]
+      group node[:wordpress][:group]
       mode "0644"
       action :create_if_missing
     end
 
     if wp_major_version.to_f >= 3.5
-      remote_file "#{node[:wordpress][:base_dir]}/#{site_name}/wp-content/languages/twentytwelve-#{site_lang}.mo" do
+      remote_file "#{site_directory}/wp-content/languages/twentytwelve-#{site_lang}.mo" do
         source "https://translate.wordpress.org/projects/wp/#{lang_version}/twentytwelve/#{site_lang}/default/export-translations?format=mo"
         backup false
-        owner "root"
-        group "root"
+        owner node[:wordpress][:owner]
+        group node[:wordpress][:group]
         mode "0644"
         action :create_if_missing
       end
     end
 
     if wp_major_version.to_f >= 3.6
-      remote_file "#{node[:wordpress][:base_dir]}/#{site_name}/wp-content/languages/twentythirteen-#{site_lang}.mo" do
+      remote_file "#{site_directory}/wp-content/languages/twentythirteen-#{site_lang}.mo" do
         source "https://translate.wordpress.org/projects/wp/#{lang_version}/twentythirteen/#{site_lang}/default/export-translations?format=mo"
         backup false
-        owner "root"
-        group "root"
+        owner node[:wordpress][:owner]
+        group node[:wordpress][:group]
         mode "0644"
         action :create_if_missing
       end
     end
 
     if wp_major_version.to_f >= 3.8
-      remote_file "#{node[:wordpress][:base_dir]}/#{site_name}/wp-content/languages/twentyfourteen-#{site_lang}.mo" do
+      remote_file "#{site_directory}/wp-content/languages/twentyfourteen-#{site_lang}.mo" do
         source "https://translate.wordpress.org/projects/wp/#{lang_version}/twentyfourteen/#{site_lang}/default/export-translations?format=mo"
         backup false
-        owner "root"
-        group "root"
+        owner node[:wordpress][:owner]
+        group node[:wordpress][:group]
         mode "0644"
         action :create_if_missing
       end

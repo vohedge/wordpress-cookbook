@@ -1,5 +1,7 @@
 default_unless[:wordpress]                         = {}
 default[:wordpress][:base_dir]                     = '/var/www'
+default[:wordpress][:owner]                        = 'root'
+default[:wordpress][:group]                        = 'root'
 default[:wordpress][:site_defaults][:name]         = 'wordpress.example.com'
 default[:wordpress][:site_defaults][:version]      = '4.0'
 default[:wordpress][:site_defaults][:lang]         = nil

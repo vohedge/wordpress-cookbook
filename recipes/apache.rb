@@ -22,7 +22,7 @@ sites.each do |site|
     server_name site[:name]
     docroot "#{node[:wordpress][:base_dir]}/#{site[:name]}"
     allow_override "AuthConfig FileInfo"
-    directory_options "None"
+    directory_options "FollowSymLinks"
   end
 end
 

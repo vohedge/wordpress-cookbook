@@ -16,6 +16,7 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[wordpress::test-user]
       - recipe[wordpress]
     attributes:
       mysql:
@@ -23,6 +24,8 @@ suites:
         server_repl_password: p@ass0wrd
         server_debian_password: p@ass0wrd
       wordpress:
+        owner: wordpress
+        group: wordpress
         sites:
           - name: wp1.example.com
             version: '3.4.1'
