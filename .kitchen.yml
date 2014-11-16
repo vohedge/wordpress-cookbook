@@ -25,14 +25,14 @@ suites:
       wordpress:
         sites:
           - name: wp1.example.com
-            version: 3.6
+            version: '3.4.1'
             lang: ja
             db:
               name: wp1
               user: wordpress1
               pass: wordpress1
           - name: wp2.example.com
-            version: 4.0
+            version: '4.0'
             lang: ja
             db:
               name: wp2
